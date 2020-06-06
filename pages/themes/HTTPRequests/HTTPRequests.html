@@ -77,18 +77,18 @@
 	</section>
 	<section><h3>HTTPClient.get()</h3>
 		<pre><code rel="Syntax" class="js">
-			// asuming we have instantiated http object from HTTPClient:
+			// assuming we have instantiated http object from HTTPClient:
 			http.get(URL [,options])
 		</code></pre>
 		<dl class="fa">
 			<dt><span class="note">URL:</span> - the endpoint URL from which to fetch</dt>
 			<dt><span class="note">options</span> - options object that we can use to configure the request. [Optional]</dt>
 		</dl>
-		<p>Reference: <a href="https://angular.io/guide/http#requesting-data-from-a-server">Requesting data from a server @angular quide</a></p>
+		<p>Reference: <a href="https://angular.io/guide/http#requesting-data-from-a-server">Requesting data from a server @angular guide</a></p>
 	</section>
 	<section><h3>HTTPClient.post()</h3>
 		<pre><code rel="Syntax" class="js">
-			// asuming we have instantiated http object from HTTPClient:
+			// assuming we have instantiated http object from HTTPClient:
 			http.get(URL, body [,options])
 		</code></pre>
 		<dl class="fa">
@@ -292,15 +292,16 @@
 		</dl>
 		<pre><code rel="TS" class="ts">
 			interface Employee {
-					name: string;
-					salary: number;
+				name: string;
+				salary: number;
 			}
 
-			let employee = <Employee>{ };
+			let employee = <Employee>{};
 
 			employee.name = "Ada"; // OK
 			employee.salary = 1234; // OK
 		</code></pre>
+		<p>Reference: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html#type-assertions">Type assertions @typescriptlang</a></p>
 	</section>
 	<section><h3>Cast the retrieved Observable into Books array</h3>
 		<dl class="fa">
@@ -371,7 +372,7 @@
 <section><h2> Getting the Full HTTP Response with Angular HttpClient</h2>
 	<section><h3></h3>
 		<dl class="fa">
-			<dt>By default, HttpClient does only provide the response body, parsed as JSON, but often we need to acces the full repsonse object</dt>
+			<dt>By default, HttpClient does only provide the response body, parsed as JSON, but often we need to access the full response object</dt>
 			<dt>We can get the full response with the <span class="note">observe option</span> of the get() method:</dt>
 		</dl>
 		<pre><code rel="Syntax" class="js">
@@ -392,7 +393,6 @@
 			<dt>By checking if an error is an instance of ErrorEvent, we can figure out which type of error we have and handle it accordingly.</dt>
 		</dl>
 	</section>
-	<section><h3></h3></section>
 	<section><h3></h3>
 		<p>For catching errors in Observable we can use the RxJS <a href="https://rxjs-dev.firebaseapp.com/api/operators/catchError">catchError</a> operator:</p>
 		<pre><code rel="JS" class="js">
@@ -418,6 +418,11 @@
 				  )
 			  }
 		</code></pre>
+		<dl class="fa">
+			<dt>Reference:</dt>
+			<dd><a href="https://angular.io/guide/http#handling-request-errors">Handling request errors @angular quide</a></dd>
+			<dd><a href="https://blog.angular-university.io/rxjs-error-handling/">RxJs Error Handling: Complete Practical Guide</a></dd>
+		</dl>
 	</section>
 </section>
 
@@ -439,7 +444,7 @@
 			<dt>Inspect and catch possible errors</dt>
 		</dl>
 	</section>
-	<section><h3>Demo with real resver</h3>
+	<section><h3>Demo with real server</h3>
 		<dl class="fa">
 			<dt>Make a GET, POST,DELETE, PUT requests to fetch todos from real server</dt>
 			<dt>Host: http://127.0.0.1:8000/</dt>
@@ -454,8 +459,12 @@
 			<tr><td>DELETE</td>	<td>apis/v1/todos/id</td>	<td>remove Todo by id</td></tr>
 			<tr><td>DELETE</td>	<td>apis/v1/todos</td>		<td>remove all todos</td></tr>
 		</table>
-
-
+	</section>
+	<section><h3>The steps:</h3>
+		<dl class="fa">
+			<dt>Change Todo interface</dt>
+			<dt>Create api service with methods for all HTTP request needed</dt>
+		</dl>
 	</section>
 </section>
 
