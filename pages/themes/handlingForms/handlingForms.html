@@ -72,7 +72,7 @@
 		<p>The typical work-flow when using forms in Angular:</p>
 		<a href="images/angularFormsOverview1.png"><img src="images/angularFormsOverview1.png"></a>
 	</section>
-	<section><h3>The two ways of handling forms</h3>
+	<section><h3>The two approaches of handling forms</h3>
 		<dl class="fa">
 			<dt class="note">Template Driven Forms (TDF)</dt>
 			<dd>mostly on the template side</dd>
@@ -80,18 +80,98 @@
 			<dd>mostly on the class side</dd>
 		</dl>
 	</section>
+	<section><h3>The two approaches of handling forms</h3>
+		<p>Both approaches allows us to:</p>
+		<dl class="fa">
+			<dt>capture input events from the view</dt>
+			<dt>validate the user input</dt>
+			<dt>properly displaying error messages</dt>
+			<dt>create a form model and data model to update</dt>
+			<dt>track changes of the global form state</dt>
+		</dl>
+	</section>
+	<section><h3>Common foundation:</h3>
+		<p>Both reactive and template-driven forms share underlying building blocks.</p>
+		<dl class="fa">
+			<dt><span class="note">FormControl</span> tracks the value and validation status of an individual form control.</dt>
+			<dt><span class="note">FormGroup</span> tracks the same values and status for a collection of form controls.</dt>
+			<dt><span class="note">FormArray</span> tracks the same values and status for an array of form controls.</dt>
+			<dt><span class="note">ControlValueAccessor</span> creates a bridge between Angular FormControl instances and native DOM elements.</dt>
+		</dl>
+	</section>
 </section>
 
+<section data-min="5"><h1>Prepare the formsDemoApp</h1></section>
+<section><h2>Prepare the formsDemoApp</h2>
+	<section>
+		<dl class="fa">
+			<dt>In next slides I'll be using a demo app (<code>formsDemoApp</code>) with 2 modules:</dt>
+			<dd><code>tdf</code> - module for Template Driven Forms demos</dd>
+			<dd><code>rf</code> - module for Reactive Forms demos</dd>
+		</dl>
+		<pre><code rel="Terminal" class="bash">
+			# create new App for playing with Angular Forms:
+			ng new formsDemoApp
+
+			# create the TDF module:
+			ng g m tdf --route tdf --module app.module
+
+			# create the RF module:
+			ng g m rf --route rf --module app.module
+		</code></pre>
+	</section>
+	<section><h3>app.component.html</h3>
+		<p>Let's make the router links for the two lazy-loaded modules</p>
+		<pre><code rel="app.component.html" class="html5">
+			&lt;nav&gt;
+				&lt;ul&gt;
+					&lt;li&gt;&lt;a routerLink=&quot;/tdf&quot; routerLinkActive=&quot;active&quot;&gt;TDF demo&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a routerLink=&quot;/rf&quot; routerLinkActive=&quot;active&quot;&gt;RF demo&lt;/a&gt;&lt;/li&gt;
+				&lt;/ul&gt;
+			&lt;/nav&gt;
+
+			&lt;router-outlet&gt;&lt;/router-outlet&gt;
+		</code></pre>
+	</section>
+	<section><h3>app.component.css</h3>
+		<p>And add some styling</p>
+		<pre><code rel="app.component.css" class="css">
+			nav{
+				font-size: 1.2em;
+				background-color: #299;
+
+			}
+			ul{
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-evenly;
+				align-items: center;
+				padding: .5em;
+			}
+			li{
+				list-style-type: none;
+			}
+			a{
+				color: #DDD;
+			}
+
+			.active{
+				color: #9F9;
+				font-weight: bold;
+			}
+		</code></pre>
+	</section>
+</section>
 
 <section data-min="20"><h1>Template Driven Forms</h1></section>
 <section><h2>Template Driven Forms</h2>
 	<section><h3>Overview</h3>
 		<dl class="fa">
 			<dt>Template driven forms (TDF) follows the approach for working with forms similar in Angular 1.x</dt>
-			<dt>As the names suggest, most of the logic, like creating form controls, forms, and defining validations is written inside the template in a declarative manner.</dt>
+			<dt>As the names suggest, most of the logic, like creating form controls, forms, and defining validations is written inside the template in a <span class="note">declarative manner</span>.</dt>
 		</dl>
 	</section>
-	<section><h3>The steps</h3>
+	<section><h3>The steps to create TDF</h3>
 		<dl class="fa">
 			<dt>Add the form HTML</dt>
 			<dt>Bind the data</dt>
@@ -104,36 +184,41 @@
 </section>
 
 <section data-min="10"><h1>The HTML and style of the form</h1></section>
-<section><h2>Styling forms</h2>
+<section><h2>The HTML and style of the form</h2>
 	<section><h3>With Bootstrap4</h3>
 		<dl class="fa">
-			<dt><a href="https://getbootstrap.com/docs/4.0/components/forms/">Forms @bootsrap4</a></dt>
+			<dt>HTML Forms control are not easy to style, so we will use some third-party library</dt>
+			<dt><a href="https://getbootstrap.com/docs/4.5/components/forms/">Forms @bootsrap</a></dt>
 			<dt>You can add Bootstrap library from a CDN: <a href="https://www.bootstrapcdn.com/">BootstrapCDN</a> into your <code>scr/index.html</code></dt>
 		</dl>
-		<pre><code rel="HTML" class="html">
-			&lt;form&gt;
-				&lt;div class=&quot;form-group&quot;&gt;
-					&lt;label for=&quot;exampleInputEmail1&quot;&gt;Email address&lt;/label&gt;
-					&lt;input type=&quot;email&quot; class=&quot;form-control&quot; id=&quot;exampleInputEmail1&quot; aria-describedby=&quot;emailHelp&quot; placeholder=&quot;Enter email&quot;&gt;
-					&lt;small id=&quot;emailHelp&quot; class=&quot;form-text text-muted&quot;&gt;We'll never share your email with anyone else.&lt;/small&gt;
-				&lt;/div&gt;
-				&lt;div class=&quot;form-group&quot;&gt;
-					&lt;label for=&quot;exampleInputPassword1&quot;&gt;Password&lt;/label&gt;
-					&lt;input type=&quot;password&quot; class=&quot;form-control&quot; id=&quot;exampleInputPassword1&quot; placeholder=&quot;Password&quot;&gt;
-				&lt;/div&gt;
-				&lt;div class=&quot;form-check&quot;&gt;
-					&lt;input type=&quot;checkbox&quot; class=&quot;form-check-input&quot; id=&quot;exampleCheck1&quot;&gt;
-					&lt;label class=&quot;form-check-label&quot; for=&quot;exampleCheck1&quot;&gt;Check me out&lt;/label&gt;
-				&lt;/div&gt;
-				&lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Submit&lt;/button&gt;
-			&lt;/form&gt;
+	</section>
+	<section><h3>tdf.component.html</h3>
+		<p>Add the HTML code into the component (just copy from <a href="https://getbootstrap.com/docs/4.5/components/forms/">Forms @bootsrap</a> ):</p>
+		<pre><code rel="tdf.component.html" class="html5">
+			<h1>Template Driven Forms Demo</h1>
+			<form>
+				<div class="form-group">
+					<label for="exampleInputEmail1">Email address</label>
+					<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+					<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+				</div>
+				<div class="form-group">
+					<label for="exampleInputPassword1">Password</label>
+					<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+				</div>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="exampleCheck1">
+					<label class="form-check-label" for="exampleCheck1">Check me out</label>
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</form>
 		</code></pre>
 	</section>
-	<section><h3>With Angular Material</h3>
+	<!-- <section><h3>With Angular Material</h3>
 		<dl class="fa">
 			<dt><a href="https://material.angular.io/components/categories/forms">Form Controls</a> <a href="https://material.angular.io/">@Angular Material</a></dt>
 		</dl>
-	</section>
+	</section> -->
 	<!-- <section><h3>Installing Material Components for your App</h3>
 		<dl class="fa">
 			<dt>Angular Material comes packaged with Angular CLI schematics to make creating Material applications easier: <a href="https://material.angular.io/guide/schematics">Install Schematics</a></dt>
@@ -149,7 +234,8 @@
 <section><h2>Binding form data</h2>
 	<section><h3>The FormsModule</h3>
 		<dl class="fa">
-			<dt>Import the Angular's form module</dt>
+			<dt><code>FormsModule</code> exports the required providers and directives for template-driven forms.</dt>
+			<dt>To use it, we have to import the <code>FormsModule</code> into our module</dt>
 		</dl>
 		<pre><code rel="app.module.ts" class="js">
 			import { FormsModule} from '@angular/forms'
@@ -163,6 +249,28 @@
 					FormsModule
 				],
 		</code></pre>
+	</section>
+	<section><h3>FormsModule Directives</h3>
+		<p>The FormsModule class defines many directives, but most important are</p>
+		<table>
+			<tr>
+				<th>Directive</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>NgForm</td>
+				<td>Creates a top-level FormGroup instance and binds it to a form to track aggregate form value and validation status.</td>
+			</tr>
+			<tr>
+				<td>NgModel</td>
+				<td>Creates a FormControl instance from a domain model and binds it to a form control element.</td>
+			</tr>
+			<tr>
+				<td>NgModelGroup</td>
+				<td>Creates and binds a FormGroup instance to a DOM element.</td>
+			</tr>
+		</table>
+		<p>Reference: <a href="https://angular.io/api/forms/FormsModule">FormsModule @angular.io/api</a></p>
 	</section>
 	<section><h3>ngForm Directive</h3>
 		<dl class="fa">

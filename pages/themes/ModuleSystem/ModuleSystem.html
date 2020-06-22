@@ -148,6 +148,8 @@
 			<dd>An array, that specifies which components belong to that module</dd>
 			<dt><code><span class="note">imports</span>=[]</code></dt>
 			<dd>An array, that specifies other NgModules that this particular module needs to function properly.</dd>
+			<dt><code><span class="note">exports</span>=[]</code></dt>
+			<dd>The set of components, directives, and pipes declared in this NgModule that can be used in the template of any component that is part of an NgModule that imports this NgModule.</dd>
 			<dt><code><span class="note">providers</span>=[]</code></dt>
 			<dd>An array, that specifies the services your app will use. Recall, that you can also specify providers at the component level, which is often preferred.</dd>
 			<dt><code><span class="note">bootstrap</span>=[]</code></dt>
@@ -251,9 +253,9 @@
 			ng new test-app --minimal
 
 			# create the three modules in /app folder, and let CLI include them into app module:
-			ng g m app/moduleA --module app
-			ng g m app/moduleB --module app
-			ng g m app/moduleLazy --module app
+			ng g m moduleA --module app
+			ng g m moduleB --module app
+			ng g m moduleLazy --module app
 		</code></pre>
 	</section>
 	<section><h3>app.module.ts</h3>
@@ -296,7 +298,7 @@
 			@NgModule({
 				declarations: [ComponentAComponent],
 				imports: [
-						CommonModule
+					CommonModule
 				]
 			})
 			export class ModuleAModule { }
@@ -328,7 +330,7 @@
 		</code></pre>
 	</section>
 	<section><h3>Create the components - TASK</h3>
-		<p>Make sure, that each component is included into its module, like:</p>
+		<p>Make sure, that each component is declared into its module, like:</p>
 		<pre><code rel="JS" class="js">
 			import { NgModule } from '@angular/core';
 			import { CommonModule } from '@angular/common';
@@ -346,7 +348,7 @@
 	</section>
 	<section><h3>Share a component</h3>
 		<dl class="fa">
-			<dt>If we want to share a component form one module with other modules, we have to export it</dt>
+			<dt>If we want to share a component form one module with other modules,<span class="note"> we have to export it</span></dt>
 			<dt>Let's export ComponentB, so that we can use it in app module</dt>
 		</dl>
 		<pre><code rel="module-b.module.ts" class="js">
@@ -370,8 +372,10 @@
 		<dl class="fa">
 			<dt>Now, we can use ComponentB in any app component by using its selector:</dt>
 		</dl>
-		<pre><code rel="Template" class="html5">
-			<app-component-b></app-component-b>
+		<pre><code rel="app.component.ts" class="html5">
+			template: `
+				<app-component-b></app-component-b>
+			`,
 		</code></pre>
 	</section>
 	<section><h3>Create lazy-loading module</h3>
@@ -456,15 +460,15 @@
 		<dl class="fa">
 			<dt>Of course, we must add a &lt;router-outlet&gt;&lt;/router-outlet&gt; in order to display the ModuleLazyModule components, and navigation link:</dt>
 		</dl>
-		<pre><code rel="JS" class="js">
+		<pre><code rel="app.component.ts" class="js">
 			import { Component } from '@angular/core';
 
 			@Component({
 				selector: 'app-root',
 				template: `
-						<app-component-b></app-component-b>
-						<a routerLink='lazy'>lazy module</a>
-						<router-outlet></router-outlet>
+					&lt;app-component-b&gt;&lt;/app-component-b&gt;
+					&lt;a routerLink=&#39;lazy&#39;&gt;lazy module&lt;/a&gt;
+					&lt;router-outlet&gt;&lt;/router-outlet&gt;
 				`,
 				styles: []
 			})
